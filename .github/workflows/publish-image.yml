@@ -15,7 +15,7 @@ on:
         description: "Comma-separated platforms"
         required: false
         type: string
-        default: linux/amd64,linux/arm64/v8
+        default: linux/amd64
       private:
         description: "Make image private"
         required: false
@@ -33,7 +33,7 @@ on:
       platforms:
         type: string
         required: false
-        default: linux/amd64,linux/arm64/v8
+        default: linux/amd64
       private:
         type: boolean
         required: false
