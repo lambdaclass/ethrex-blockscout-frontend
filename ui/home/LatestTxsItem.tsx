@@ -37,21 +37,21 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
         lg: columnNum === 2 ? '3fr minmax(auto, 180px)' : '3fr minmax(auto, 180px) 170px',
         xl: columnNum === 2 ? '3fr minmax(auto, 250px)' : '3fr minmax(auto, 275px) 170px',
       }}
-      gridGap={ 8 }
+      gridGap={8}
       width="100%"
       minW="700px"
       borderBottom="1px solid"
       borderColor="border.divider"
-      p={ 4 }
+      p={4}
       display={{ base: 'none', lg: 'grid' }}
     >
       <Flex overflow="hidden" w="100%">
-        <TxAdditionalInfo tx={ tx } isLoading={ isLoading } my="3px"/>
-        <Box ml={ 3 } w="calc(100% - 40px)">
+        <TxAdditionalInfo tx={tx} isLoading={isLoading} my="3px" />
+        <Box ml={3} w="calc(100% - 40px)">
           <HStack flexWrap="wrap" my="3px">
-            <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-            <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
-            <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
+            <TxType types={tx.transaction_types} txType={tx.type} isLoading={isLoading} />
+            <TxStatus status={tx.status} errorText={tx.status === 'error' ? tx.result : undefined} isLoading={isLoading} />
+            <TxWatchListTags tx={tx} isLoading={isLoading} />
           </HStack>
           <Flex
             alignItems="center"
@@ -59,41 +59,41 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
             mb="3px"
           >
             <TxEntity
-              isLoading={ isLoading }
-              hash={ tx.hash }
+              isLoading={isLoading}
+              hash={tx.hash}
               fontWeight="700"
             />
             <TimeWithTooltip
-              timestamp={ tx.timestamp }
+              timestamp={tx.timestamp}
               enableIncrement
               timeFormat="relative"
-              isLoading={ isLoading }
+              isLoading={isLoading}
               color="text.secondary"
-              flexShrink={ 0 }
-              ml={ 2 }
+              flexShrink={0}
+              ml={2}
             />
           </Flex>
         </Box>
       </Flex>
       <AddressFromTo
-        from={ tx.from }
-        to={ dataTo }
-        isLoading={ isLoading }
+        from={tx.deposited_to ?? tx.from}
+        to={tx.deposited_to ? null : dataTo}
+        isLoading={isLoading}
         mode="compact"
       />
-      <Flex flexDir="column" rowGap={ 3 }>
-        { !config.UI.views.tx.hiddenFields?.value && (
-          <Skeleton loading={ isLoading }>
+      <Flex flexDir="column" rowGap={3}>
+        {!config.UI.views.tx.hiddenFields?.value && (
+          <Skeleton loading={isLoading}>
             <Text as="span" whiteSpace="pre">Value </Text>
-            <Text as="span" color="text.secondary">{ getValueWithUnit(tx.value).dp(5).toFormat() } { currencyUnits.ether }</Text>
+            <Text as="span" color="text.secondary">{getValueWithUnit(tx.value).dp(5).toFormat()} {currencyUnits.ether}</Text>
           </Skeleton>
-        ) }
-        { !config.UI.views.tx.hiddenFields?.tx_fee && (
-          <Skeleton loading={ isLoading } display="flex" whiteSpace="pre">
+        )}
+        {!config.UI.views.tx.hiddenFields?.tx_fee && (
+          <Skeleton loading={isLoading} display="flex" whiteSpace="pre">
             <Text as="span">Fee </Text>
-            <TxFee tx={ tx } accuracy={ 5 } color="text.secondary"/>
+            <TxFee tx={tx} accuracy={5} color="text.secondary" />
           </Skeleton>
-        ) }
+        )}
       </Flex>
     </Grid>
   );

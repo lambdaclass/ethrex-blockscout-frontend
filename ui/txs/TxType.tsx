@@ -4,9 +4,11 @@ import type { TransactionType } from 'types/api/transaction';
 
 import type { BadgeProps } from 'toolkit/chakra/badge';
 import { Badge } from 'toolkit/chakra/badge';
+import { TX_TYPES } from 'toolkit/utils/consts';
 
 export interface Props extends BadgeProps {
   types: Array<TransactionType>;
+  txType: number | null;
   isLoading?: boolean;
 }
 
@@ -21,7 +23,7 @@ const TYPES_ORDER: Array<TransactionType> = [
   'coin_transfer',
 ];
 
-const TxType = ({ types, isLoading, ...rest }: Props) => {
+const TxType = ({ types, txType, isLoading }: Props) => {
   const typeToShow = types.sort((t1, t2) => TYPES_ORDER.indexOf(t1) - TYPES_ORDER.indexOf(t2))[0];
 
   let label;
@@ -65,14 +67,20 @@ const TxType = ({ types, isLoading, ...rest }: Props) => {
       colorPalette = 'purple';
   }
 
+  if (txType && txType === TX_TYPES.DEPOSIT) {
+    label = 'Deposit';
+    colorPalette = 'blue';
+  }
+
   if (!label) {
     return null;
   }
 
+
   return (
-    <Badge colorPalette={ colorPalette } loading={ isLoading } { ...rest }>
-      { label }
-    </Badge>
+    <Badge colorPalette={colorPalette} loading={isLoading}>
+      {label}
+    </Badge >
   );
 };
 

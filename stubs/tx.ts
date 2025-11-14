@@ -50,6 +50,7 @@ export const TX: Transaction = {
     14545,
   ],
   transaction_tag: null,
+  deposited_to: null,
 };
 
 export const TX_ZKEVM_L2: Transaction = {

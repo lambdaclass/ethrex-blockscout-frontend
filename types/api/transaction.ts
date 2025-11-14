@@ -36,6 +36,7 @@ export type Transaction = {
   timestamp: string | null;
   confirmation_duration: Array<number> | null;
   from: AddressParam;
+  deposited_to: AddressParam | null;
   value: string;
   fee: Fee;
   gas_price: string | null;

@@ -70,6 +70,7 @@ export const base: Transaction = {
   value: '42000000000000000000',
   actions: [],
   has_error_in_internal_transactions: false,
+  deposited_to: null,
 };
 
 export const withWatchListNames: Transaction = {

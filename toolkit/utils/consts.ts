@@ -17,3 +17,10 @@ export const Kb = 1_000;
 export const Mb = 1_000 * Kb;
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+export enum TX_TYPES {
+  EIP1559 = 2,
+  EIP4844 = 3,
+  EIP7702 = 4,
+  DEPOSIT = 126,
+};

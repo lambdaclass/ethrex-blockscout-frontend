@@ -32,12 +32,12 @@ const CrossChainTxsTableItem = ({ item, isLoading, animation, currencySymbol, cu
   const sourceChain = React.useMemo(() => {
     const config = multichainConfig();
     return config?.chains.find((chain) => chain.config.chain.id === item.init_chain_id);
-  }, [ item ]);
+  }, [item]);
 
   const targetChain = React.useMemo(() => {
     const config = multichainConfig();
     return config?.chains.find((chain) => chain.config.chain.id === item.relay_chain_id);
-  }, [ item ]);
+  }, [item]);
 
   const value = getCurrencyValue({
     value: item.transfer?.total?.value ?? '0',
@@ -45,15 +45,15 @@ const CrossChainTxsTableItem = ({ item, isLoading, animation, currencySymbol, cu
   });
 
   return (
-    <TableRow animation={ animation }>
+    <TableRow animation={animation}>
       <TableCell>
-        <VStack alignItems="start" gap={ 0 }>
-          <Link fontWeight="700" minH="30px" loading={ isLoading } href={ route({ pathname: '/tx/[hash]', query: { hash: String(item.nonce) } }) }>
-            { item.nonce }
+        <VStack alignItems="start" gap={0}>
+          <Link fontWeight="700" minH="30px" loading={isLoading} href={route({ pathname: '/tx/[hash]', query: { hash: String(item.nonce) } })}>
+            {item.nonce}
           </Link>
           <TimeWithTooltip
-            timestamp={ item.timestamp }
-            isLoading={ isLoading }
+            timestamp={item.timestamp}
+            isLoading={isLoading}
             color="text.secondary"
             whiteSpace="nowrap"
             my="5px"
@@ -61,64 +61,64 @@ const CrossChainTxsTableItem = ({ item, isLoading, animation, currencySymbol, cu
         </VStack>
       </TableCell>
       <TableCell>
-        <VStack alignItems="start" gap={ 0 }>
-          <TxType types={ [ item.message_type as TransactionType ] } isLoading={ isLoading } my="3px"/>
-          <CrossChainTxStatusTag status={ item.status } loading={ isLoading } my="3px"/>
+        <VStack alignItems="start" gap={0}>
+          <TxType types={[item.message_type as TransactionType]} txType={null} isLoading={isLoading} my="3px" />
+          <CrossChainTxStatusTag status={item.status} loading={isLoading} my="3px" />
         </VStack>
       </TableCell>
       <TableCell>
-        <Badge colorPalette="gray" loading={ isLoading } truncated my="3px">{ item.method }</Badge>
+        <Badge colorPalette="gray" loading={isLoading} truncated my="3px">{item.method}</Badge>
       </TableCell>
       <TableCell>
-        { item.init_transaction_hash ? (
+        {item.init_transaction_hash ? (
           <TxEntity
-            hash={ item.init_transaction_hash }
-            isLoading={ isLoading }
+            hash={item.init_transaction_hash}
+            isLoading={isLoading}
             truncation="constant"
-            chain={ sourceChain }
+            chain={sourceChain}
             minH="30px"
           />
         ) :
-          <Spinner size="md" my="5px"/>
+          <Spinner size="md" my="5px" />
         }
       </TableCell>
       <TableCell>
-        { item.relay_transaction_hash ? (
+        {item.relay_transaction_hash ? (
           <TxEntity
-            hash={ item.relay_transaction_hash }
-            isLoading={ isLoading }
+            hash={item.relay_transaction_hash}
+            isLoading={isLoading}
             truncation="constant"
-            chain={ targetChain }
+            chain={targetChain}
             minH="30px"
           />
         ) :
-          <Spinner size="md" my="5px"/>
+          <Spinner size="md" my="5px" />
         }
       </TableCell>
       <TableCell>
         <AddressFromTo
           from={{ hash: item.sender?.hash ?? 'N/A' }}
           to={{ hash: item.target?.hash ?? 'N/A' }}
-          current={ currentAddress }
-          isLoading={ isLoading }
+          current={currentAddress}
+          isLoading={isLoading}
           truncation="constant"
           my="5px"
         />
       </TableCell>
       <TableCell isNumeric>
         <Skeleton
-          loading={ isLoading }
+          loading={isLoading}
           display="inline-flex"
           alignItems="center"
           flexWrap="wrap"
           whiteSpace="pre-wrap"
           wordBreak="break-word"
           justifyContent="flex-end"
-          columnGap={ item.transfer?.token ? 2 : 0 }
+          columnGap={item.transfer?.token ? 2 : 0}
           my="5px"
         >
-          <span>{ value.valueStr }</span>
-          { item.transfer?.token ? (
+          <span>{value.valueStr}</span>
+          {item.transfer?.token ? (
             <TokenEntity
               token={{
                 address_hash: item.transfer.token.address_hash,
@@ -133,7 +133,7 @@ const CrossChainTxsTableItem = ({ item, isLoading, animation, currencySymbol, cu
               justifyContent="flex-end"
               w="fit-content"
             />
-          ) : <span> { currencySymbol ?? '' }</span> }
+          ) : <span> {currencySymbol ?? ''}</span>}
         </Skeleton>
       </TableCell>
     </TableRow>

@@ -48,8 +48,8 @@ const TABS_RIGHT_SLOT_PROPS = {
 };
 
 const TokenPageContent = () => {
-  const [ isQueryEnabled, setIsQueryEnabled ] = React.useState(false);
-  const [ totalSupplySocket, setTotalSupplySocket ] = React.useState<number>();
+  const [isQueryEnabled, setIsQueryEnabled] = React.useState(false);
+  const [totalSupplySocket, setTotalSupplySocket] = React.useState<number>();
   const router = useRouter();
   const isMobile = useIsMobile();
 
@@ -80,7 +80,7 @@ const TokenPageContent = () => {
         }
       });
     }
-  }, [ tokenQuery.data, totalSupplySocket, hashString, queryClient ]);
+  }, [tokenQuery.data, totalSupplySocket, hashString, queryClient]);
 
   const handleTotalSupplyMessage: SocketMessage.TokenTotalSupply['handler'] = React.useCallback((payload) => {
     const prevData = queryClient.getQueryData(getResourceKey('general:token', { pathParams: { hash: hashString } }));
@@ -92,12 +92,12 @@ const TokenPageContent = () => {
         return { ...prevData, total_supply: payload.total_supply.toString() };
       }
     });
-  }, [ queryClient, hashString ]);
+  }, [queryClient, hashString]);
 
   const enableQuery = React.useCallback(() => setIsQueryEnabled(true), []);
 
   const channel = useSocketChannel({
-    topic: `tokens:${ hashString?.toLowerCase() }`,
+    topic: `tokens:${hashString?.toLowerCase()}`,
     isDisabled: !hashString,
     onJoin: enableQuery,
     onSocketError: enableQuery,
@@ -125,7 +125,7 @@ const TokenPageContent = () => {
       };
       metadata.update({ pathname: '/token/[hash]', query: { hash: tokenQuery.data.address_hash } }, apiData);
     }
-  }, [ tokenQuery.data, tokenQuery.isPlaceholderData, verifiedInfoQuery.isPlaceholderData, verifiedInfoQuery.data ]);
+  }, [tokenQuery.data, tokenQuery.isPlaceholderData, verifiedInfoQuery.isPlaceholderData, verifiedInfoQuery.data]);
 
   const hasData = (tokenQuery.data && !tokenQuery.isPlaceholderData) && (addressQuery.data && !addressQuery.isPlaceholderData);
   const hasInventoryTab = tokenQuery.data?.type && NFT_TOKEN_TYPE_IDS.includes(tokenQuery.data.type);
@@ -186,17 +186,17 @@ const TokenPageContent = () => {
     hasInventoryTab ? {
       id: 'inventory',
       title: 'Inventory',
-      component: <TokenInventory inventoryQuery={ inventoryQuery } tokenQuery={ tokenQuery } ownerFilter={ ownerFilter } shouldRender={ !isLoading }/>,
+      component: <TokenInventory inventoryQuery={inventoryQuery} tokenQuery={tokenQuery} ownerFilter={ownerFilter} shouldRender={!isLoading} />,
     } : undefined,
     {
       id: 'token_transfers',
       title: 'Token transfers',
-      component: <TokenTransfer transfersQuery={ transfersQuery } tokenQuery={ tokenQuery } shouldRender={ !isLoading }/>,
+      component: <TokenTransfer transfersQuery={transfersQuery} tokenQuery={tokenQuery} shouldRender={!isLoading} />,
     },
     {
       id: 'holders',
       title: 'Holders',
-      component: <TokenHolders token={ tokenQuery.data } holdersQuery={ holdersQuery } shouldRender={ !isLoading }/>,
+      component: <TokenHolders token={tokenQuery.data} holdersQuery={holdersQuery} shouldRender={!isLoading} />,
     },
     addressQuery.data?.is_contract ? {
       id: 'contract',
@@ -205,21 +205,21 @@ const TokenPageContent = () => {
           return (
             <>
               <span>Contract</span>
-              <IconSvg name="status/success" boxSize="14px" color="green.500"/>
+              <IconSvg name="status/success" boxSize="14px" color="green.500" />
             </>
           );
         }
 
         return 'Contract';
       },
-      component: <AddressContract addressData={ addressQuery.data } isLoading={ isLoading }/>,
+      component: <AddressContract addressData={addressQuery.data} isLoading={isLoading} />,
       subTabs: CONTRACT_TAB_IDS,
     } : undefined,
     (address3rdPartyWidgets.isEnabled && address3rdPartyWidgets.items.length > 0) ? {
       id: 'widgets',
       title: 'Widgets',
       count: address3rdPartyWidgets.items.length,
-      component: <Address3rdPartyWidgets shouldRender={ !isLoading } addressType="token" showAll/>,
+      component: <Address3rdPartyWidgets shouldRender={!isLoading} addressType="token" showAll />,
     } : undefined,
   ].filter(Boolean);
 
@@ -249,7 +249,7 @@ const TokenPageContent = () => {
       pb: 6,
       marginBottom: 0,
     };
-  }, [ isMobile ]);
+  }, [isMobile]);
 
   const tabsRightSlot = React.useMemo(() => {
     if (isMobile) {
@@ -258,45 +258,45 @@ const TokenPageContent = () => {
 
     return (
       <>
-        { (tab === 'token_transfers' || tab === '') && (
-          <TokenAdvancedFilterLink token={ tokenQuery.data } ml={ 6 }/>
-        ) }
-        { tab === 'holders' && (
+        {(tab === 'token_transfers' || tab === '') && (
+          <TokenAdvancedFilterLink token={tokenQuery.data} ml={6} />
+        )}
+        {tab === 'holders' && (
           <AddressCsvExportLink
-            address={ hashString }
+            address={hashString}
             params={{ type: 'holders' }}
-            isLoading={ pagination?.isLoading }
-            ml={ 6 }
+            isLoading={pagination?.isLoading}
+            ml={6}
           />
-        ) }
-        { pagination?.isVisible && <Pagination { ...pagination }/> }
+        )}
+        {pagination?.isVisible && <Pagination {...pagination} />}
       </>
     );
-  }, [ hashString, isMobile, pagination, tab, tokenQuery.data ]);
+  }, [hashString, isMobile, pagination, tab, tokenQuery.data]);
 
   return (
     <>
-      <TextAd mb={ 6 }/>
+      <TextAd mb={6} />
 
       <TokenPageTitle
-        tokenQuery={ tokenQuery }
-        addressQuery={ addressQuery }
-        verifiedInfoQuery={ verifiedInfoQuery }
-        hash={ hashString }
+        tokenQuery={tokenQuery}
+        addressQuery={addressQuery}
+        verifiedInfoQuery={verifiedInfoQuery}
+        hash={hashString}
       />
 
-      <TokenDetails tokenQuery={ tokenQuery }/>
+      <TokenDetails tokenQuery={tokenQuery} />
 
-      { /* should stay before tabs to scroll up with pagination */ }
-      <Box ref={ scrollRef }></Box>
+      { /* should stay before tabs to scroll up with pagination */}
+      <Box ref={scrollRef}></Box>
 
       <RoutedTabs
-        tabs={ tabs }
-        listProps={ tabListProps }
-        rightSlot={ tabsRightSlot }
-        rightSlotProps={ TABS_RIGHT_SLOT_PROPS }
-        stickyEnabled={ !isMobile }
-        isLoading={ isLoading }
+        tabs={tabs}
+        listProps={tabListProps}
+        rightSlot={tabsRightSlot}
+        rightSlotProps={TABS_RIGHT_SLOT_PROPS}
+        stickyEnabled={!isMobile}
+        isLoading={isLoading}
       />
     </>
   );

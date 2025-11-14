@@ -36,98 +36,98 @@ const TxsTableItem = ({ tx, showBlockInfo, currentAddress, enableTimeIncrement, 
   const dataTo = tx.to ? tx.to : tx.created_contract;
 
   return (
-    <TableRow key={ tx.hash } animation={ animation }>
+    <TableRow key={tx.hash} animation={animation}>
       <TableCell textAlign="center">
-        <TxAdditionalInfo tx={ tx } isLoading={ isLoading }/>
+        <TxAdditionalInfo tx={tx} isLoading={isLoading} />
       </TableCell>
-      { chainData && (
+      {chainData && (
         <TableCell>
-          <ChainIcon data={ chainData } isLoading={ isLoading } my="2px"/>
+          <ChainIcon data={chainData} isLoading={isLoading} my="2px" />
         </TableCell>
-      ) }
-      <TableCell pr={ 4 }>
+      )}
+      <TableCell pr={4}>
         <VStack alignItems="start" lineHeight="24px">
           <TxEntity
-            hash={ tx.hash }
-            isLoading={ isLoading }
+            hash={tx.hash}
+            isLoading={isLoading}
             fontWeight="bold"
             noIcon
             maxW="100%"
             truncation="constant"
           />
           <TimeWithTooltip
-            timestamp={ tx.timestamp }
-            enableIncrement={ enableTimeIncrement }
-            isLoading={ isLoading }
+            timestamp={tx.timestamp}
+            enableIncrement={enableTimeIncrement}
+            isLoading={isLoading}
             color="text.secondary"
           />
         </VStack>
       </TableCell>
       <TableCell>
         <VStack alignItems="start">
-          { tx.translation ? (
+          {tx.translation ? (
             <TxTranslationType
-              types={ tx.transaction_types }
-              isLoading={ isLoading || tx.translation.isLoading }
-              translatationType={ tx.translation.data?.type }
+              types={tx.transaction_types}
+              isLoading={isLoading || tx.translation.isLoading}
+              translatationType={tx.translation.data?.type}
             />
           ) :
-            <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
+            <TxType types={tx.transaction_types} txType={tx.type} isLoading={isLoading} />
           }
-          <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
-          <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
+          <TxStatus status={tx.status} errorText={tx.status === 'error' ? tx.result : undefined} isLoading={isLoading} />
+          <TxWatchListTags tx={tx} isLoading={isLoading} />
         </VStack>
       </TableCell>
       <TableCell whiteSpace="nowrap">
-        { tx.method && (
-          <Badge colorPalette={ tx.method === 'Multicall' ? 'teal' : 'gray' } loading={ isLoading } truncated>
-            <span>{ tx.method }</span>
+        {tx.method && (
+          <Badge colorPalette={tx.method === 'Multicall' ? 'teal' : 'gray'} loading={isLoading} truncated>
+            <span>{tx.method}</span>
           </Badge>
-        ) }
+        )}
       </TableCell>
-      { showBlockInfo && (
+      {showBlockInfo && (
         <TableCell>
-          <Flex alignItems="center" gap={ 2 }>
-            { tx.block_number && (
+          <Flex alignItems="center" gap={2}>
+            {tx.block_number && (
               <BlockEntity
-                isLoading={ isLoading }
-                number={ tx.block_number }
+                isLoading={isLoading}
+                number={tx.block_number}
                 noIcon
                 textStyle="sm"
-                fontWeight={ 500 }
+                fontWeight={500}
               />
-            ) }
-            { tx.is_pending_update && <BlockPendingUpdateHint view="tx"/> }
+            )}
+            {tx.is_pending_update && <BlockPendingUpdateHint view="tx" />}
           </Flex>
         </TableCell>
-      ) }
+      )}
       <TableCell>
         <AddressFromTo
-          from={ tx.from }
-          to={ dataTo }
-          current={ currentAddress }
-          isLoading={ isLoading }
+          from={tx.deposited_to ?? tx.from}
+          to={tx.deposited_to ? null : dataTo}
+          current={currentAddress}
+          isLoading={isLoading}
           mt="2px"
           mode="compact"
         />
       </TableCell>
-      { !config.UI.views.tx.hiddenFields?.value && (
+      {!config.UI.views.tx.hiddenFields?.value && (
         <TableCell isNumeric>
-          <CurrencyValue value={ tx.value } decimals={ String(config.chain.currency.decimals) } accuracy={ 8 } isLoading={ isLoading } wordBreak="break-word"/>
+          <CurrencyValue value={tx.value} decimals={String(config.chain.currency.decimals)} accuracy={8} isLoading={isLoading} wordBreak="break-word" />
         </TableCell>
-      ) }
-      { !config.UI.views.tx.hiddenFields?.tx_fee && (
+      )}
+      {!config.UI.views.tx.hiddenFields?.tx_fee && (
         <TableCell isNumeric maxW="220px">
           <TxFee
-            tx={ tx }
-            accuracy={ 8 }
-            isLoading={ isLoading }
-            withCurrency={ Boolean(tx.celo || tx.stability_fee) }
+            tx={tx}
+            accuracy={8}
+            isLoading={isLoading}
+            withCurrency={Boolean(tx.celo || tx.stability_fee)}
             justifyContent="end"
             wordBreak="break-word"
           />
         </TableCell>
-      ) }
+      )}
     </TableRow>
   );
 };

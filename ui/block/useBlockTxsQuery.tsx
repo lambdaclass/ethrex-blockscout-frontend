@@ -34,18 +34,20 @@ interface Params {
 }
 
 export default function useBlockTxsQuery({ heightOrHash, blockQuery, tab }: Params): BlockTxsQuery {
-  const [ isRefetchEnabled, setRefetchEnabled ] = React.useState(false);
+  const [isRefetchEnabled, setRefetchEnabled] = React.useState(false);
 
   const apiQuery = useQueryWithPages({
     resourceName: 'general:block_txs',
     pathParams: { height_or_hash: heightOrHash },
     options: {
       enabled: Boolean(tab === 'txs' && !blockQuery.isPlaceholderData && !blockQuery.isDegradedData),
-      placeholderData: generateListStub<'general:block_txs'>(TX, 50, { next_page_params: {
-        block_number: 9004925,
-        index: 49,
-        items_count: 50,
-      } }),
+      placeholderData: generateListStub<'general:block_txs'>(TX, 50, {
+        next_page_params: {
+          block_number: 9004925,
+          index: 49,
+          items_count: 50,
+        }
+      }),
       refetchOnMount: false,
       retry: (failureCount, error) => {
         if (isRefetchEnabled) {
@@ -61,14 +63,14 @@ export default function useBlockTxsQuery({ heightOrHash, blockQuery, tab }: Para
   });
 
   const rpcQuery = useQuery<RpcResponseType, unknown, BlockTransactionsResponse | null>({
-    queryKey: [ 'RPC', 'block_txs', { heightOrHash } ],
-    queryFn: async() => {
+    queryKey: ['RPC', 'block_txs', { heightOrHash }],
+    queryFn: async () => {
       if (!publicClient) {
         return null;
       }
 
       const blockParams = heightOrHash.startsWith('0x') ?
-        { blockHash: heightOrHash as `0x${ string }`, includeTransactions: true } :
+        { blockHash: heightOrHash as `0x${string}`, includeTransactions: true } :
         { blockNumber: BigInt(heightOrHash), includeTransactions: true };
       return publicClient.getBlock(blockParams).catch(() => null);
     },
@@ -122,6 +124,7 @@ export default function useBlockTxsQuery({ heightOrHash, blockQuery, tab }: Para
               transaction_types: [],
               transaction_tag: null,
               actions: [],
+              deposited_to: null,
             };
           })
           .filter(Boolean),
@@ -144,13 +147,13 @@ export default function useBlockTxsQuery({ heightOrHash, blockQuery, tab }: Para
     } else if (!apiQuery.isError) {
       setRefetchEnabled(false);
     }
-  }, [ apiQuery.errorUpdateCount, apiQuery.isError, apiQuery.isPlaceholderData ]);
+  }, [apiQuery.errorUpdateCount, apiQuery.isError, apiQuery.isPlaceholderData]);
 
   React.useEffect(() => {
     if (!rpcQuery.isPlaceholderData && !rpcQuery.data) {
       setRefetchEnabled(false);
     }
-  }, [ rpcQuery.data, rpcQuery.isPlaceholderData ]);
+  }, [rpcQuery.data, rpcQuery.isPlaceholderData]);
 
   const isRpcQuery = Boolean((
     blockQuery.isDegradedData ||
@@ -160,10 +163,10 @@ export default function useBlockTxsQuery({ heightOrHash, blockQuery, tab }: Para
   const rpcQueryWithPages: QueryWithPagesResult<'general:block_txs'> = {
     ...rpcQuery as UseQueryResult<BlockTransactionsResponse, ResourceError>,
     pagination: emptyPagination,
-    onFilterChange: () => {},
-    onSortingChange: () => {},
+    onFilterChange: () => { },
+    onSortingChange: () => { },
     chainValue: undefined,
-    onChainValueChange: () => {},
+    onChainValueChange: () => { },
   };
 
   const query = isRpcQuery ? rpcQueryWithPages : apiQuery;

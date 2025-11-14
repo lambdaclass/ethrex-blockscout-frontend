@@ -34,22 +34,22 @@ interface Props {
 
 const TxDetailsDegraded = ({ hash, txQuery }: Props) => {
 
-  const [ originalError ] = React.useState(txQuery.error);
+  const [originalError] = React.useState(txQuery.error);
 
   const query = useQuery<RpcResponseType, unknown, Transaction | null>({
-    queryKey: [ 'RPC', 'tx', { hash } ],
-    queryFn: async() => {
+    queryKey: ['RPC', 'tx', { hash }],
+    queryFn: async () => {
       if (!publicClient) {
         throw new Error('No public RPC client');
       }
 
-      const tx = await publicClient.getTransaction({ hash: hash as `0x${ string }` });
+      const tx = await publicClient.getTransaction({ hash: hash as `0x${string}` });
 
       if (!tx) {
         throw new Error('Not found');
       }
 
-      const txReceipt = await publicClient.getTransactionReceipt({ hash: hash as `0x${ string }` }).catch(() => null);
+      const txReceipt = await publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).catch(() => null);
       const block = await publicClient.getBlock({ blockHash: tx.blockHash }).catch(() => null);
       const latestBlock = await publicClient.getBlock().catch(() => null);
       const confirmations = latestBlock && block ? latestBlock.number - block.number + BigInt(1) : null;
@@ -62,7 +62,7 @@ const TxDetailsDegraded = ({ hash, txQuery }: Props) => {
       ];
     },
     select: (response) => {
-      const [ tx, txReceipt, txConfirmations, block ] = response;
+      const [tx, txReceipt, txConfirmations, block] = response;
 
       const status = (() => {
         if (!txReceipt) {
@@ -114,6 +114,7 @@ const TxDetailsDegraded = ({ hash, txQuery }: Props) => {
         transaction_types: [],
         transaction_tag: null,
         actions: [],
+        deposited_to: null,
       };
     },
     placeholderData: [
@@ -134,29 +135,29 @@ const TxDetailsDegraded = ({ hash, txQuery }: Props) => {
     if (!query.isPlaceholderData && hasData) {
       txQuery.setRefetchEnabled(true);
     }
-  }, [ hasData, query.isPlaceholderData, txQuery ]);
+  }, [hasData, query.isPlaceholderData, txQuery]);
 
   React.useEffect(() => {
     return () => {
       txQuery.setRefetchEnabled(false);
     };
-  }, [ txQuery ]);
+  }, [txQuery]);
 
   if (!query.data) {
     if (originalError && isCustomAppError(originalError)) {
       throwOnResourceLoadError({ resource: 'general:tx', error: originalError, isError: true });
     }
 
-    return <DataFetchAlert/>;
+    return <DataFetchAlert />;
   }
 
   return (
     <>
       <Flex rowGap={{ base: 1, lg: 2 }} mb={{ base: 3, lg: 6 }} flexDir="column">
-        <TestnetWarning isLoading={ query.isPlaceholderData }/>
-        { originalError?.status !== 404 && <ServiceDegradationWarning isLoading={ query.isPlaceholderData }/> }
+        <TestnetWarning isLoading={query.isPlaceholderData} />
+        {originalError?.status !== 404 && <ServiceDegradationWarning isLoading={query.isPlaceholderData} />}
       </Flex>
-      <TxInfo data={ query.data } isLoading={ query.isPlaceholderData }/>
+      <TxInfo data={query.data} isLoading={query.isPlaceholderData} />
     </>
   );
 };
