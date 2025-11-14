@@ -48,6 +48,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Remove .NET
+        shell: bash
+        run: sudo rm -rf /usr/share/dotnet/
+
+      - name: Remove Android SDK
+        shell: bash
+        run: sudo rm -rf /usr/local/lib/android
+
+      - name: Remove Haskell
+        shell: bash
+        run: sudo rm -rf /opt/ghc /usr/local/.ghcup
+
+
       - name: Check out repo
         uses: actions/checkout@v4
 
